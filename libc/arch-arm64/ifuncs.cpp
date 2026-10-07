@@ -62,7 +62,6 @@ DEFINE_IFUNC_FOR(memchr) {
 MEMCHR_SHIM()
 
 DEFINE_IFUNC_FOR(memcmp) {
-  // TODO: enable the SVE version.
   RETURN_FUNC(memcmp_func_t, __memcmp_aarch64);
 }
 MEMCMP_SHIM()
@@ -72,6 +71,8 @@ DEFINE_IFUNC_FOR(memcpy) {
     RETURN_FUNC(memcpy_func_t, __memmove_aarch64_mops);
   } else if (__bionic_is_oryon(arg->_hwcap)) {
     RETURN_FUNC(memcpy_func_t, __memcpy_aarch64_nt);
+  } else if (arg->_hwcap & HWCAP_SVE) {
+    RETURN_FUNC(memcpy_func_t, __memcpy_aarch64_sve);
   } else if (arg->_hwcap & HWCAP_ASIMD) {
     RETURN_FUNC(memcpy_func_t, __memcpy_aarch64_simd);
   } else {
@@ -85,6 +86,8 @@ DEFINE_IFUNC_FOR(memmove) {
     RETURN_FUNC(memmove_func_t, __memmove_aarch64_mops);
   } else if (__bionic_is_oryon(arg->_hwcap)) {
     RETURN_FUNC(memmove_func_t, __memmove_aarch64_nt);
+  } else if (arg->_hwcap & HWCAP_SVE) {
+    RETURN_FUNC(memmove_func_t, __memmove_aarch64_sve);
   } else if (arg->_hwcap & HWCAP_ASIMD) {
     RETURN_FUNC(memmove_func_t, __memmove_aarch64_simd);
   } else {
@@ -103,6 +106,8 @@ DEFINE_IFUNC_FOR(memset) {
     RETURN_FUNC(memset_func_t, __memset_aarch64_mops);
   } else if (__bionic_is_oryon(arg->_hwcap)) {
     RETURN_FUNC(memset_func_t, __memset_aarch64_nt);
+  } else if (arg->_hwcap & HWCAP_SVE) {
+    RETURN_FUNC(memset_func_t, __memset_aarch64_sve);
   } else {
     RETURN_FUNC(memset_func_t, __memset_aarch64);
   }
@@ -110,7 +115,6 @@ DEFINE_IFUNC_FOR(memset) {
 MEMSET_SHIM()
 
 DEFINE_IFUNC_FOR(stpcpy) {
-  // TODO: enable the SVE version.
   RETURN_FUNC(stpcpy_func_t, __stpcpy_aarch64);
 }
 STPCPY_SHIM()
@@ -118,6 +122,8 @@ STPCPY_SHIM()
 DEFINE_IFUNC_FOR(strchr) {
   if (arg->_hwcap2 & HWCAP2_MTE) {
     RETURN_FUNC(strchr_func_t, __strchr_aarch64_mte);
+  } else if (arg->_hwcap2 & HWCAP2_SVE2) {
+    RETURN_FUNC(strchr_func_t, __strchr_aarch64_sve2);
   } else {
     RETURN_FUNC(strchr_func_t, __strchr_aarch64);
   }
@@ -127,6 +133,8 @@ STRCHR_SHIM()
 DEFINE_IFUNC_FOR(strchrnul) {
   if (arg->_hwcap2 & HWCAP2_MTE) {
     RETURN_FUNC(strchrnul_func_t, __strchrnul_aarch64_mte);
+  } else if (arg->_hwcap2 & HWCAP2_SVE2) {
+    RETURN_FUNC(strchrnul_func_t, __strchrnul_aarch64_sve2);
   } else {
     RETURN_FUNC(strchrnul_func_t, __strchrnul_aarch64);
   }
@@ -134,13 +142,11 @@ DEFINE_IFUNC_FOR(strchrnul) {
 STRCHRNUL_SHIM()
 
 DEFINE_IFUNC_FOR(strcmp) {
-  // TODO: enable the SVE version.
   RETURN_FUNC(strcmp_func_t, __strcmp_aarch64);
 }
 STRCMP_SHIM()
 
 DEFINE_IFUNC_FOR(strcpy) {
-  // TODO: enable the SVE version.
   RETURN_FUNC(strcpy_func_t, __strcpy_aarch64);
 }
 STRCPY_SHIM()
@@ -155,13 +161,11 @@ DEFINE_IFUNC_FOR(strlen) {
 STRLEN_SHIM()
 
 DEFINE_IFUNC_FOR(strncmp) {
-  // TODO: enable the SVE version.
   RETURN_FUNC(strncmp_func_t, __strncmp_aarch64);
 }
 STRNCMP_SHIM()
 
 DEFINE_IFUNC_FOR(strnlen) {
-  // TODO: enable the SVE version.
   RETURN_FUNC(strnlen_func_t, __strnlen_aarch64);
 }
 STRNLEN_SHIM()
